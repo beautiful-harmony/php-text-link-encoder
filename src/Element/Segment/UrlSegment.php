@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Smeghead\TextLinkEncoder\Element\Segment;
 
+use Laminas\Escaper\Escaper;
 use Smeghead\TextLinkEncoder\Config\Value;
 
 final class UrlSegment implements Segment
@@ -13,18 +14,21 @@ final class UrlSegment implements Segment
         return '/https?:\/{2}[\w\/:%#\$&\?\(\)~\.=\+\-]+/';
     }
 
-    public function __construct(private Value $value, private string $segment)
+    public function __construct(
+        private Escaper $escaper,
+        private Value $value,
+        private string $segment
+    )
     {
     }
 
     public function toHtml(): string
     {
-        $encoded = htmlspecialchars($this->segment, ENT_QUOTES);
         return sprintf(
             '<a href="%s" target="%s" rel="noreferrer noopener">%s</a>',
-            $encoded,
-            htmlspecialchars($this->value->linkTarget, ENT_QUOTES),
-            $encoded
+            $this->segment,
+            $this->escaper->escapeHtmlAttr($this->value->linkTarget),
+            htmlspecialchars($this->segment, ENT_QUOTES)
         );
     }
 }
