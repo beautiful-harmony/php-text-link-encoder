@@ -40,6 +40,18 @@ final class TextLinkEncoderTest extends TestCase
         $this->assertSame('<a href="http://www.example.com/" target="_blank" rel="noreferrer noopener">http://www.example.com/</a>', $sut->encode('http://www.example.com/'), 'link tag.');
     }
 
+    public function testEncodeUrlFallback(): void
+    {
+        $sut = new TextLinkEncoder(new TextLinkEncoderSettings());
+
+        $text = <<<'DIST'
+        http://localhost&param
+        DIST;
+
+
+        $this->assertSame('http://localhost&amp;param', $sut->encode($text), 'link tag.');
+    }
+
     public function testEncodeUrlLinkTargetSelf(): void
     {
         $sut = new TextLinkEncoder((new TextLinkEncoderSettings())->linkTarget('_self'));

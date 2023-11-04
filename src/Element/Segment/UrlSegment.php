@@ -24,6 +24,10 @@ final class UrlSegment implements Segment
 
     public function toHtml(): string
     {
+        if (!filter_var($this->segment, FILTER_VALIDATE_URL)) {
+            return htmlspecialchars($this->segment, ENT_QUOTES);
+        }
+
         return sprintf(
             '<a href="%s" target="%s" rel="noreferrer noopener">%s</a>',
             $this->segment,
