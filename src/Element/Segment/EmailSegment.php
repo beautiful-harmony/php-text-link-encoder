@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Smeghead\TextLinkEncoder\Element\Segment;
 
 use Smeghead\TextLinkEncoder\Config\TextLinkEncoderSettings;
+use Smeghead\TextLinkEncoder\Config\Value;
 
 final class EmailSegment implements Segment
 {
@@ -13,7 +14,7 @@ final class EmailSegment implements Segment
         return '/[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}/';
     }
 
-    public function __construct(private TextLinkEncoderSettings $settings, private string $segment)
+    public function __construct(private Value $value, private string $segment)
     {
     }
 
@@ -23,7 +24,7 @@ final class EmailSegment implements Segment
         return sprintf(
             '<a href="mailto:%s" target="%s" rel="noreferrer noopener">%s</a>',
             $encoded,
-            htmlspecialchars($this->settings->value()->linkTarget, ENT_QUOTES),
+            htmlspecialchars($this->value->linkTarget, ENT_QUOTES),
             $encoded
         );
     }

@@ -25,10 +25,13 @@ use Smeghead\TextLinkEncoder\Parse\ParseString;
  */
 final class TextLinkEncoder
 {
-    /**
-     */
-    public function __construct(private TextLinkEncoderSettings $settings)
+    private ElementSegmentManager $elementSegmentManager;
+
+    public function __construct(
+        private TextLinkEncoderSettings $settings,
+    )
     {
+        $this->elementSegmentManager = new ElementSegmentManager($this->settings);
     }
 
     private const SEGMENT_CLASSES = [
@@ -53,9 +56,9 @@ final class TextLinkEncoder
 
                 $position = $result->nextPosition;
                 // URLより前の部分をエスケープしてpartsに格納する。
-                $line->add(new TextSegment($this->settings, mb_substr($restText, 0, $position)));
+                $line->add(new TextSegment(mb_substr($restText, 0, $position)));
                 // URLをリンクに変換する。
-                $line->add(new $result->class($this->settings, $result->matchString));
+                $line->add($this->elementSegmentManager->instantiate($result->class, $result->matchString));
                 $restText = mb_substr($restText, $position + mb_strlen($result->matchString));
             }
             $segmentLines[] = $line;

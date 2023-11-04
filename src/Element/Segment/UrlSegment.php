@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Smeghead\TextLinkEncoder\Element\Segment;
 
-use Smeghead\TextLinkEncoder\Config\TextLinkEncoderSettings;
+use Smeghead\TextLinkEncoder\Config\Value;
 
 final class UrlSegment implements Segment
 {
@@ -13,7 +13,7 @@ final class UrlSegment implements Segment
         return '/https?:\/{2}[\w\/:%#\$&\?\(\)~\.=\+\-]+/';
     }
 
-    public function __construct(private TextLinkEncoderSettings $settings, private string $segment)
+    public function __construct(private Value $value, private string $segment)
     {
     }
 
@@ -23,7 +23,7 @@ final class UrlSegment implements Segment
         return sprintf(
             '<a href="%s" target="%s" rel="noreferrer noopener">%s</a>',
             $encoded,
-            htmlspecialchars($this->settings->value()->linkTarget, ENT_QUOTES),
+            htmlspecialchars($this->value->linkTarget, ENT_QUOTES),
             $encoded
         );
     }
