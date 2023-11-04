@@ -13,8 +13,7 @@ final class TextSegment implements Segment
         return '/.*/';
     }
 
-    // @phpstan-ignore-next-line
-    public function __construct(private TextLinkEncoderSettings $settings, private string $segment)
+    public function __construct(private string $segment)
     {
     }
 
